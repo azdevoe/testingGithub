@@ -1,67 +1,69 @@
 let form = document.getElementById('form');
 let todoItem = document.getElementById('todoItem');
-
-let display = document.querySelector('.display')
+let display = document.querySelector('.display');
 let resetForm = document.getElementById('resetForm');
-let reset = document.getElementById('reset');
-let arr = []
+let resetInput = document.getElementById('reset');
+let arr = [];
+let updateIndex = null; // To store the index of the task being updated
 
-
-
-form.addEventListener('submit', (e)=>{
+// Add task
+form.addEventListener('submit', (e) => {
     e.preventDefault();
-    display.innerHTML = ''
-    let todoValue = todoItem.value;
+    let todoValue = todoItem.value.trim();
 
-    console.log(todoValue);
-
-    arr.push(todoValue)
-    add()
-   
-    todoItem.value
-})
-
-function add(){
-    display.innerHTML =''
-     for(let i=0; i<arr.length; i++){
-        let container = document.createElement('div');
-        let hh = document.createElement('h1')
-        let vh = document.createElement('span')
-        let btn = document.createElement('button')
-        let update = document.createElement('button')
-        btn.innerText = 'delete'
-        update.innerText = 'change task'
-
-        container.appendChild(hh)
-                hh.appendChild(vh)
-
-                hh.appendChild(btn)
-                hh.appendChild(update)
-                vh.innerText = arr[i]
-
-        display.appendChild(container)
-
-        btn.addEventListener('click', function (){
-            arr.splice(i, 1)
-
-            add()
-            
-        
-        })
-
-        update.addEventListener('click', function (){
-                resetForm.style.display = 'inline'
-                let reset = document.createElement('form')
-                let labe = document.createElement('label')
-                
-
-                arr[i] = 'reset'
-                add()
-                console.log(arr);
-                
-        })
-
+    if (todoValue !== "") {
+        arr.push(todoValue);
+        add();
+        todoItem.value = ""; // Clear the input field
     }
+});
 
+// Update task
+resetForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    let resetValue = resetInput.value.trim();
 
+    if (resetValue !== "" && updateIndex !== null) {
+        arr[updateIndex] = resetValue; // Update the task in the array
+        add(); // Re-render the list
+        resetForm.style.display = 'none'; // Hide the reset form
+        resetInput.value = ""; // Clear the input field
+        updateIndex = null; // Reset the update index
+    }
+});
+
+// Render the list
+function add() {
+    display.innerHTML = ''; // Clear the display before re-rendering
+
+    for (let i = 0; i < arr.length; i++) {
+        let container = document.createElement('div');
+        let hh = document.createElement('h1');
+        let vh = document.createElement('span');
+        let deleteBtn = document.createElement('button');
+        let updateBtn = document.createElement('button');
+
+        vh.innerText = arr[i];
+        deleteBtn.innerText = 'Delete';
+        updateBtn.innerText = 'Update';
+
+        container.appendChild(hh);
+        hh.appendChild(vh);
+        hh.appendChild(deleteBtn);
+        hh.appendChild(updateBtn);
+        display.appendChild(container);
+
+        // Delete task
+        deleteBtn.addEventListener('click', () => {
+            arr.splice(i, 1); // Remove the task from the array
+            add(); // Re-render the list
+        });
+
+        // Show update form
+        updateBtn.addEventListener('click', () => {
+            resetForm.style.display = 'inline'; // Show the reset form
+            resetInput.value = arr[i]; // Pre-fill the input with the current task
+            updateIndex = i; // Store the index of the task being updated
+        });
+    }
 }
