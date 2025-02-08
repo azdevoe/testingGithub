@@ -1,28 +1,67 @@
 let form = document.getElementById('form');
 let todoItem = document.getElementById('todoItem');
-let btn = document.getElementById('btn');
+
 let display = document.querySelector('.display')
-let todoValue = todoItem.value;
+let resetForm = document.getElementById('resetForm');
+let reset = document.getElementById('reset');
 let arr = []
 
 
 
-btn.addEventListener('click', (e)=>{
+form.addEventListener('submit', (e)=>{
     e.preventDefault();
+    display.innerHTML = ''
+    let todoValue = todoItem.value;
+
+    console.log(todoValue);
 
     arr.push(todoValue)
-    console.log(arr);
-    
-
+    add()
+   
+    todoItem.value
 })
 
+function add(){
+    display.innerHTML =''
+     for(let i=0; i<arr.length; i++){
+        let container = document.createElement('div');
+        let hh = document.createElement('h1')
+        let vh = document.createElement('span')
+        let btn = document.createElement('button')
+        let update = document.createElement('button')
+        btn.innerText = 'delete'
+        update.innerText = 'change task'
 
-Student 1: Name = "Alice", Score = 85.5
+        container.appendChild(hh)
+                hh.appendChild(vh)
 
-Student 2: Name = "Bob", Score = 72.0
+                hh.appendChild(btn)
+                hh.appendChild(update)
+                vh.innerText = arr[i]
 
-Student 3: Name = "Charlie", Score = 90.0
+        display.appendChild(container)
 
-Student 4: Name = "scott", Score = 64.9
+        btn.addEventListener('click', function (){
+            arr.splice(i, 1)
 
-how would it handle this
+            add()
+            
+        
+        })
+
+        update.addEventListener('click', function (){
+                resetForm.style.display = 'inline'
+                let reset = document.createElement('form')
+                let labe = document.createElement('label')
+                
+
+                arr[i] = 'reset'
+                add()
+                console.log(arr);
+                
+        })
+
+    }
+
+
+}
